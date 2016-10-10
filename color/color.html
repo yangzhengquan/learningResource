@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>color</title>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="jq/jquery-ui.min.js"></script>
+
+	<style type="text/css">
+	*{margin: 0;padding: 0;}
+	#img1{display: none;}
+	
+	</style>
+	<link rel="stylesheet" type="text/css" href="jq/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="jq/jquery-ui.theme.min.css">
+</head>
+<body onclick="change();">
+<img onload="reDraw()" src="8.jpg" id="img1">
+<canvas id="myCanvas"></canvas>
+
+<div id="rgb"></div>
+red 增量：<div class="slider" id="rSlider"></div><br>
+green增量：<div class="slider"  id="gSlider"></div><br>
+blue增量<div class="slider" id="bSlider"></div><br>
+alpha增量<div class="slider" id="aSlider"></div><br>
+<br>
+<button id="changeImg">changeImg</button>
+<button id="blackWhite">blackWhite</button>
+<button id="fillWhite">fillWhite</button>
+<button id="reverseColor">reverseColor</button>
+<!-- <button id="R+">Red+</button>
+<button id="R-">Red-</button>
+<button id="G+">Green+</button>
+<button id="G-">Green-</button>
+<button id="B+">Blue+</button>
+<button id="B-">Blue-</button> -->
+<button id="animationColor">animationColor</button>
+
+<script type="text/javascript">
+$(function(){
+
+	var $body=$("body"),$rgb=$("#rgb");
+	var winW= $body.width(),winH= $(window).height()-20;
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+var img=document.getElementById("img1");
+var imgData;
+var R,G,B;
+
+!function init(){
+	c.width=winW;
+	c.height=winH;
+}();
+
+window.reDraw=function(){
+	ctx.drawImage(img,0,0,winW,winH);
+	imgData=ctx.getImageData(0,0,winW,winH);
+}
+window.reDraw();
+window.change=function change(){
+	//changeColor();
+}
+function log(){}
+function changeColor(){
+	// reverseColor();//反色
+	//blackWhite();//黑白
+	fillWhite();
+}
+function fillWhite(){
+	var w=255,t=0,i=0;
+	requestAnimationFrame(function animation(){
+		
+		//for (var i=0;i<imgData.data.length;i+=20){
+
+				  for(j=0;j<400;j++){
+				  	imgData.data[i+j]=w;
+				  }
+
+				  
+				 /* imgData.data[i+1]=w;
+				  imgData.data[i+2]=w;
+				  imgData.data[i+3]=w;*/
+
+		  //}
+			ctx.putImageData(imgData,0,0);
+			i+=500;
+		requestAnimationFrame(arguments.callee)
+	});
+	
+}
+function blackWhite(){
+	var average
+	for (var i=0;i<imgData.data.length;i+=4)
+  {
+  	  average=(imgData.data[i]+imgData.data[i+1]+imgData.data[i+2])/3;
+	  imgData.data[i]=average;
+	  imgData.data[i+1]=average;
+	  imgData.data[i+2]=average;
+	  imgData.data[i+3]=255;
+  }
+	ctx.putImageData(imgData,0,0);
+}
+function reverseColor(){
+	for (var i=0;i<imgData.data.length;i+=4)
+  {
+	  imgData.data[i]=255-imgData.data[i];
+	  imgData.data[i+1]=255-imgData.data[i+1];
+	  imgData.data[i+2]=255-imgData.data[i+2];
+	  imgData.data[i+3]=255;
+  }
+	ctx.putImageData(imgData,0,0);
+	
+}
+function changergb(){
+	for (var i=0;i<imgData.data.length;i+=4)
+  {
+	  imgData.data[i]=255-imgData.data[i];
+	  imgData.data[i+1]=255-imgData.data[i+1];
+	  imgData.data[i+2]=255-imgData.data[i+2];
+	  imgData.data[i+3]=255;
+  }
+	ctx.putImageData(imgData,0,0);
+	log("changergb()---")
+}
+
+window.changeImg=function(){
+	var src=parseInt($("#img1").attr("src"));
+	if(src>=18){src=0;}
+	
+	$("#img1").attr("src",++src+".jpg");
+	//setTimeout(reDraw,1000)
+
+}
+var rgbP=[0,0,0,0];
+window.animationColor=function(){
+var rgba=[];
+	
+	requestAnimationFrame(function animation(){
+		
+		for (var i=0;i<imgData.data.length;i+=4){
+
+				rgba[0]=imgData.data[i]+rgbP[0];
+				rgba[1]=imgData.data[i+1]+rgbP[1];
+				rgba[2]=imgData.data[i+2]+rgbP[2];
+				rgba[3]=imgData.data[i+3]+rgbP[3];
+				if(rgba[0]>255){rgba[0]=0}
+				if(rgba[1]>255){rgba[1]=0}
+				if(rgba[2]>255){rgba[2]=0}
+				if(rgba[3]>255){rgba[3]=0}
+				  imgData.data[i]=rgba[0];
+				  imgData.data[i+1]=rgba[1];
+				  imgData.data[i+2]=rgba[2];
+				  imgData.data[i+3]=rgba[3];
+
+		  }
+			ctx.putImageData(imgData,0,0);
+
+		requestAnimationFrame(arguments.callee)
+	});
+	//setInterval(animation,500);
+
+}
+
+requestAnimationFrame(function(){
+	//changeColor();
+	//requestAnimationFrame(arguments.callee)
+});
+
+
+$("button").click(function(){
+	var id=this.id;
+	eval(id+"()");
+});
+
+$(".slider").slider({
+      min: -10,
+      max: 10,
+      value: 0,
+      slide: function( event, ui ) {
+      	var id=this.id;
+      	if(id=="rSlider"){
+      		rgbP[0]=ui.value;
+      	}else if(id=="gSlider"){
+      		rgbP[1]=ui.value;
+      	}else if(id=="bSlider"){
+      		rgbP[2]=ui.value;
+      	}else{
+      		rgbP[3]=ui.value;
+      	}
+
+      }
+    });
+})
+</script>
+</body>
+</html>

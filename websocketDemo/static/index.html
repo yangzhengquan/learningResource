@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>websocket</title>
+<style type="text/css">
+	*{margin: 0;padding: 0;}
+	html,body,#pan1{height: 100%;}
+	#input{position:fixed;bottom: 0;right: 0;left: 0;}
+	#pan1{width: 50%;}
+</style>
+<script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js'></script>
+<script type="text/javascript" src='./socket.io.min.js'></script>
+<script>
+$(function(){
+	var _id=location.hash.substring(1).split('-');
+	var $pan1=$('#pan1');
+	var socket = io.connect('http://192.168.30.106:8088/');
+	    socket.on('connect', function () {
+		    socket.send({k:'hi',from:_id[0],to:_id[1]});
+
+		    socket.on('message', function (msg) {
+		    	console.log(msg.k)
+		    	$pan1.append('<br>'+msg.k)
+		      // my msg
+		    });
+	  });
+
+	   $('#input').on('keyup',function(e){
+	   		socket.send({k:e.key,from:_id[0],to:_id[1]});
+	   		console.log('send: '+e.key);
+	   });
+})
+</script>
+
+</head>
+<body>
+<div id='pan1'></div>
+<input id='input' type="text">
+</body>
+</html>
