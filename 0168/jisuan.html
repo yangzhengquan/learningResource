@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		果织供应链估价系统
+	</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <style type="text/css">
+    	table,td,th{border:1px solid #eee;border-collapse: collapse;}
+    </style>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		
+		$(function() {
+			
+			var $inputs=$("#tb :input:not('.except')").on('keyup',function(e) {
+					var total=0;
+
+					// switch(this.id){
+					// 	case 'huoyuanjia':
+					// 		jisuanhuowujia(this);
+					// 	break;
+					// 	case 'huoyuanzhong':
+					// 		jisuanhuowujia(this);
+					// 	break;
+					// }
+
+					// $inputs.each(function(k,v) {
+					// 	//console.log(v.value)
+					// 	total+=parseFloat(v.value)||0;
+					// })
+					jisuanhuowujia(this);
+
+			});
+
+			function jisuanhuowujia(_this) {
+					var a=$('#huoyuanjia').val();
+					var b=$('#huoyuanzhong').val();
+						a=parseFloat(a)||0;
+						b=parseFloat(b)||0;
+					$("#huowujia").text(a*b);
+					//console.log(a*b)
+					var daibanfei=b*0.05;
+					var maolirun=a*b*0.1;
+					var sunhaofei=a*b*0.05;
+					$("#sunhaofei").val(sunhaofei);
+					$("#daibanfei").val(daibanfei);//葡萄0.05元/斤
+					$("#maolirun").val(maolirun);
+
+					var diyichengben=0;
+					diyichengben+=parseFloat($("#baozhuangfei").val()||0);//3
+					diyichengben+=parseFloat($("#zhuangchefei").val()||0);//4
+					diyichengben+=parseFloat(daibanfei);//5
+					diyichengben+=parseFloat($("#yunshufei").val()||0);//6
+					
+					
+
+					diyichengben+=parseFloat($("#jinchangfei").val()||0);//8
+					diyichengben+=parseFloat($("#xiehuofei").val()||0);//9
+					diyichengben+=parseFloat(sunhaofei);//10
+					diyichengben+=parseFloat($("#jiaotongfei").val()||0);//11
+
+					diyichengben+=parseFloat(maolirun);
+
+					diyichengben+=a*b;//加上货物价
+
+
+					$("#diyichengbenjia").text(diyichengben/b);
+
+
+					//第二成本价需要维持第一成本价的同时，增加代销的费用
+					var dierchengben=diyichengben/0.95;
+
+					$("#diyichengbenjia").val(diyichengben/b);
+					$("#dierchengbenjia").val(dierchengben/b);
+					//$("#cankaojia").val(dierchengbenjia);
+					$("#zhichuzonge").val(diyichengben);
+
+					$("#daixiaofei").val(dierchengben*0.05);//7
+
+
+					$("#zengjiacengben").val(dierchengben/b-a);
+
+
+
+
+			}
+		})
+	</script>
+</head>
+<body>
+<table id='tb'>
+	<tbody>
+		<tr>
+			<th colspan="2">果织供应链估价</th>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<label>葡萄<input type="radio" name="pinzhong" checked="checked"></label>
+				<label>西瓜<input type="radio" name="pinzhong"></label>
+			</td>
+		</tr>
+		<tr>
+			<td>1.产地货源价：</td>
+			<td><input id='huoyuanjia' type="text"> 元/斤 货物总价：<b id='huowujia'></b><br></td>
+		</tr>
+		<tr>
+			<td>2.货源总重量：</td>
+			<td><input id='huoyuanzhong' type="text"> 斤<br></td>
+		</tr>
+		<!-- <tr>
+			<td colspan="2"> &nbsp;&nbsp;货物总价：<span id='huowujia'></span></td>
+		</tr> -->
+		<tr>
+			<td>3.货源包装费：</td>
+			<td><input id='baozhuangfei' value="0" type="text"> 元<br></td>
+		</tr>
+		<tr>
+			<td>4.产地装车费：</td>
+			<td><input id='zhuangchefei' value="300" type="text"> 元 西瓜0.01元/斤<br></td>
+		</tr>
+		<tr>
+			<td>5.产地代办费：</td>
+			<td><input id='daibanfei' type="text"> 元 葡萄0.05元/斤,西瓜0.015元/斤<br></td>
+		</tr>
+		<tr>
+			<td>6.整车运输费：</td>
+			<td><input id='yunshufei' value="3500" type="text"> 元<br></td>
+		</tr>
+		<tr>
+			<td>7.批发代销费：</td>
+			<td><input id='daixiaofei' type="text"> 元 5%<br></td>
+		</tr>
+		<tr>
+			<td>8.批发进场费：</td>
+			<td><input id='jinchangfei' value="200" type="text"> 元<br></td>
+		</tr>
+		<tr>
+			<td>9.批发卸货费：</td>
+			<td><input id='xiehuofei' value="150" type="text"> 元 15元/车<br></td>
+		</tr>
+		<tr>
+			<td>10.各项损耗费：</td>
+			<td><input id='sunhaofei' type="text"> 元 5%<br></td>
+		</tr>
+		<tr>
+			<td>11.交通食宿费：</td>
+			<td><input id='jiaotongfei' value="1000" type="text"> 元<br></td>
+		</tr>
+		<!-- <tr>
+			<td>12.销售卸车费：</td>
+			<td><input type="text"> 元/斤<br></td>
+		</tr> -->
+		<tr>
+			<td>每斤成本增加：</td>
+			<td><input class="except" id='zengjiacengben' type="text"> 元/斤<br></td>
+		</tr>
+		<tr>
+			<td>第一成本价：</td> <!-- 关联导出代销费成本 -->
+			<td><input class="except" id='diyichengbenjia' type="text"> 元/斤<br></td>
+		</tr>
+		<tr>
+			<td>第二成本价：</td> 
+			<td><input class="except" id='dierchengbenjia' type="text"> 元/斤<br></td>
+		</tr>
+		<!-- <tr>
+			<td>批发参考价：</td>
+			<td><input class="except" id='cankaojia' type="text"> 元/斤<br></td>
+		</tr> -->
+		<tr>
+			<td>支出总金额</td>
+			<td><input class="except" id='zhichuzonge' type="text"> 元</td>
+		</tr>
+		<tr>
+			<td>果织毛利润率</td>
+			<td><input  class="except" id='maolilv' value="10%" type="text"> </td>
+		</tr>
+		<tr>
+			<td>果织毛利润</td>
+			<td><input  class="except" id='maolirun' type="text"> </td>
+		</tr>
+
+	</tbody>
+</table>
+<br>
+利润和装载量图表
+
+</body>
+</html>
