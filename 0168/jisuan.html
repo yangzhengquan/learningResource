@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <style type="text/css">
-    	table,td,th{border:1px solid #eee;border-collapse: collapse;}
+    	table,td,th{border:1px solid #eee;border-collapse: collapse;font-size: 14px;}
 	    input[type='text']{width:60px}
     </style>
 	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -47,7 +47,8 @@
 					var sunhaofei=a*b*0.05;
 					$("#sunhaofei").val(sunhaofei);
 					$("#daibanfei").val(daibanfei);//葡萄0.05元/斤
-					$("#maolirun").val(maolirun);
+					console.log(typeof maolirun)
+					$("#maolirun").text(maolirun.toFixed(4));
 
 					var diyichengben=0;
 					diyichengben+=parseFloat($("#baozhuangfei").val()||0);//3
@@ -73,15 +74,22 @@
 					//第二成本价需要维持第一成本价的同时，增加代销的费用
 					var dierchengben=diyichengben/0.95;
 
-					$("#diyichengbenjia").val(diyichengben/b);
-					$("#dierchengbenjia").val(dierchengben/b);
+					$("#diyichengbenjia").text((diyichengben/b).toFixed(4));
+					$("#dierchengbenjia").text((dierchengben/b).toFixed(4));
 					//$("#cankaojia").val(dierchengbenjia);
-					$("#zhichuzonge").val(diyichengben);
+					$("#zhichuzonge").text(diyichengben);
 
-					$("#daixiaofei").val(dierchengben*0.05);//7
+					$("#daixiaofei").val((dierchengben*0.05).toFixed(4));//7
 
+					$("#zengjiacengben").text((dierchengben/b-a).toFixed(4));
 
-					$("#zengjiacengben").val(dierchengben/b-a);
+					if(_this.id==='pifajia'){
+						var zengjialirun=_this.value*b*0.95 - diyichengben
+						$('#zengjialirun').text(zengjialirun);
+					}else{
+						$("#pifajia").val((dierchengben/b).toFixed(4));//12
+					}
+					
 
 
 
@@ -149,43 +157,43 @@
 			<td>11.交通食宿费：</td>
 			<td><input id='jiaotongfei' value="1000" type="text"> 元<br></td>
 		</tr>
-		<!-- <tr>
-			<td>12.销售卸车费：</td>
-			<td><input type="text"> 元/斤<br></td>
-		</tr> -->
+		
 		<tr>
-			<td>每斤成本增加：</td>
-			<td><input class="except" id='zengjiacengben' type="text"> 元/斤<br></td>
+			<td colspan="2">每斤成本增加： <b id='zengjiacengben'></b> 元</td>
+			<!-- <td><input class="except" id='zengjiacengben' type="text"> 元/斤<br></td> -->
 		</tr>
 		<tr>
-			<td>第一成本价：</td> <!-- 关联导出代销费成本 -->
-			<td><input class="except" id='diyichengbenjia' type="text"> 元/斤<br></td>
+			<td colspan="2">第一成本价： <b id='diyichengbenjia'></b> 元/斤</td> <!-- 关联导出代销费成本 -->
+			<!-- <td><input class="except" id='diyichengbenjia' type="text"> 元/斤<br></td> -->
 		</tr>
 		<tr>
-			<td>第二成本价：</td> 
-			<td><input class="except" id='dierchengbenjia' type="text"> 元/斤<br></td>
+			<td colspan="2">第二成本价： <b id='dierchengbenjia'></b> 元/斤</td> 
+			<!-- <td><input class="except" id='dierchengbenjia' type="text"> 元/斤<br></td> -->
 		</tr>
 		<!-- <tr>
 			<td>批发参考价：</td>
 			<td><input class="except" id='cankaojia' type="text"> 元/斤<br></td>
 		</tr> -->
 		<tr>
-			<td>支出总金额</td>
-			<td><input class="except" id='zhichuzonge' type="text"> 元</td>
+			<td colspan="2">支出总金额 <b id='zhichuzonge'></b> 元</td>
+			<!-- <td><input class="except" id='zhichuzonge' type="text"> 元</td> -->
 		</tr>
 		<tr>
-			<td>果织毛利润率</td>
-			<td><input  class="except" id='maolilv' value="10%" type="text"> </td>
+			<td colspan="2">果织毛利润 <b id='maolirun'>0</b> 元，增加利润 <b id='zengjialirun'>0</b> 元，（毛利润率 10%）</td>
+			<!-- <td><input  class="except" id='maolilv' value="10%" type="text"> </td> -->
 		</tr>
-		<tr>
+		<!-- <tr>
 			<td>果织毛利润</td>
 			<td><input  class="except" id='maolirun' type="text"> </td>
+		</tr> -->
+		<tr>
+			<td>12.批发价：</td>
+			<td><input id='pifajia' type="text"> 元/斤 <br></td>
 		</tr>
-
 	</tbody>
 </table>
 <br>
-利润和装载量图表
+利润和装载量和定价图表
 
 </body>
 </html>
